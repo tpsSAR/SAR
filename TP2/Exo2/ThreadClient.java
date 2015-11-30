@@ -1,51 +1,58 @@
-import java.net.*;
-import java.io.*;
-//je fais un test
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
-public class ThreadClient{
-	public static void main (String[] args){
-		int port = 4020;
-		InetAddress hote = null;
-		ServerSocket se = null;
-		Socket sc = null;
-		PrintWriter out = null;
-		BufferedReader in = null;
-		//BufferedReader fluxInOut;
-		String nom;
-		public ThreadClient(Socket ssv, String nom){
-		start();}
+public class ThreadClient extends Thread{
+	
+	Socket s=null;
+	BufferedReader in;
+	PrintWriter out;
 
-		try{			
-			in = new BufferedReader(new InputStreamReader(se.getInputStream()));
-			out = new PrintWriter(se.getOutputStream(), true);
-			
-			String req;
-			String response; 
-			response = "Un client est connecté "+getNom();
-			System.out.println("Je dis "+response);
-			
-			while(true){
-				response = in.readLine();
-				if(response.equals("Bye")) break;
-				try{
-			
-				}catch(IOException e){
-			
+	ThreadClient(Socket s) throws IOException{
+		this.s=s;
+		start();
+	}
+
+	//get nom du client
+
+	public void run(){			
+		try {
+				in=new BufferedReader(new InputStreamReader(s.getInputStream()));
+				out=new PrintWriter(s.getOutputStream(),true);
+
+				String rep;
+				String req;
+
+				rep = "bienvenu";
+				System.out.println("je dis au client"+rep);
+				out.println(rep);
+	
+				while(true){
+					req=in.readLine();
+					if (req.equals("Bye"))  break;
+					System.out.println("le client me dit"+req);
+					try{
+						sleep(1000);
+					}catch (InterruptedException e) {}
+					rep ="cc"; 
+					System.out.println("je dis au client" +rep);
+					out.println(rep);
 				}
-				req = "Cou";
-				out.println(req);
-				
-			}
-
-			
-		}catch(IOException e){
-			e.getMessage();
-		}finally{
-			try{
-				in.close();
-				out.close();
-			}catch(){}
+				System.out.println("fin de communication");		
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally{
+				try{
+					s.close();
+				}
+				catch (IOException e){}
 		}
 		
 	}
+			
 }

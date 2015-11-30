@@ -1,29 +1,41 @@
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-public class ServeurMultiThread implements Runnable{
-		//int port = 4020;
-		ServerSocket se = null;
-		Socket ssv = null;
-		private int nbrClient = 1;
+public class ServeurMultiThread{
 
-		public ServeurMultiThread(ServerSocket se){
-			this.se = se;
-		}
+	public static void main(String[] args){
+	int port=4010;	
+	ServerSocket se=null;
+	Socket ssv=null;
+	PrintWriter out;
+	BufferedReader in;
 
-			try{
-				se= new ServerSocket(port);
-				while(true){
-					ssv = se.accept();
-					System.out.println("Le client numéro "+nbrClient+" est connecté.");
-					nbrClient++;
-					ThreadClient tcli = new ThreadClient(ssv, nbrClient);
-					
-				}
-			}catch(IOException e){
-				e.getMessage();
-			}finally{
-				ssv.close();
-			}
+	try{
+		se = new ServerSocket(port); //ouverture de la socket d'écoute
+		System.out.println("Le serveur est pret ");
 		
+	
+		while (true) //attend qu il y ait plusieurs clients
+		{
+			ssv = se.accept();
+			System.out.println("connexion accepté ");
+			ThreadClient TC= new ThreadClient(ssv);
+		}
+	}
+	catch (IOException e){
+		System.err.println("Erreur! : " +e);
+	}
+
+	finally{
+		try{
+			se.close();
+		}
+		catch (IOException e){}
+		}
+	}
 }
+
