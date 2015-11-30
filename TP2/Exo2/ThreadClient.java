@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 
 public class ThreadClient extends Thread{
 	
-	Socket s=null;
+	Socket s = null;
 	BufferedReader in;
 	PrintWriter out;
 
